@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MasterData | Cuaderno interactivo de estadística</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F7F7F4;
+    --surface:#FFFFFF;
+    --surface-alt:#F1F1EC;
+    --ink:#181C1F;
+    --ink-soft:#4E555B;
+    --ink-dim:#8A9096;
+    --border:rgba(24,28,31,0.11);
+    --border-strong:rgba(24,28,31,0.22);
+    --accent:#1F4E5F;
+    --accent-strong:#153744;
+    --accent-soft:rgba(31,78,95,0.07);
+    --accent-soft-strong:rgba(31,78,95,0.14);
+    --gold:#A9791F;
+    --gold-soft:rgba(169,121,31,0.12);
+    --success:#2E6F49;
+    --success-soft:rgba(46,111,73,0.10);
+    --danger:#A93E45;
+    --danger-soft:rgba(169,62,69,0.09);
+    --font-display:'Fraunces', serif;
+    --font-body:'IBM Plex Sans', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+    --radius-sm:6px;
+    --radius-md:10px;
+    --header-h:64px;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    font-family:var(--font-body);
+    background-color:var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{ color:inherit; }
+
+  :focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
+  }
+
+  button{ font-family:inherit; }
+
+  /* ============ HEADER ============ */
+  header{
+    background-color:var(--surface);
+    color:var(--ink);
+    position:sticky;
+    top:0;
+    z-index:100;
+    padding:0 1.75rem;
+    height:var(--header-h);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:1rem;
+    border-bottom:1px solid var(--border);
+  }
+
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-width:0;
+  }
+
+  .brand-mark{
+    width:34px;
+    height:34px;
+    border-radius:8px;
+    background-color:var(--accent);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:1.05rem;
+    flex-shrink:0;
+  }
+
+  .brand-text{ min-width:0; }
+
+  .brand-title{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:1.15rem;
+    letter-spacing:0.1px;
+    line-height:1.2;
+  }
+
+  .brand-subtitle{
+    font-family:var(--font-mono);
+    font-size:0.68rem;
+    color:var(--ink-dim);
+    letter-spacing:0.2px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .header-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-shrink:0;
+  }
+
+  .xp-pill{
+    font-family:var(--font-mono);
+    background-color:var(--gold-soft);
+    color:var(--gold);
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:0.8rem;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    white-space:nowrap;
+  }
+
+  .xp-dot{
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background-color:var(--gold);
+    flex-shrink:0;
+  }
+
+  .btn{
+    background-color:var(--surface);
+    color:var(--ink);
+    border:1px solid var(--border-strong);
+    padding:8px 14px;
+    min-height:38px;
+    border-radius:var(--radius-sm);
+    font-weight:600;
+    font-size:0.82rem;
+    cursor:pointer;
+    transition:background-color 0.15s ease, border-color 0.15s ease;
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    white-space:nowrap;
+  }
+
+  .btn:hover{
+    background-color:var(--surface-alt);
+    border-color:var(--ink-dim);
+  }
+
+  .btn-primary{
+    background-color:var(--accent);
+    border-color:var(--accent);
+    color:#fff;
+  }
+
+  .btn-primary:hover{
+    background-color:var(--accent-strong);
+    border-color:var(--accent-strong);
+  }
+
+  .btn:disabled{
+    opacity:0.4;
+    cursor:not-allowed;
+  }
+
+  .btn:disabled:hover{
+    background-color:var(--surface);
+  }
+
+  .btn-primary:disabled:hover{
+    background-color:var(--accent);
+  }
+
+  /* ============ PROGRESS BAR ============ */
+  .progress-bar-container{
+    width:100%;
+    height:3px;
+    background-color:var(--border);
+  }
+
+  .progress-bar-fill{
+    height:100%;
+    width:0%;
+    background-color:var(--accent);
+    transition:width 0.4s ease;
+  }
+
+  /* ============ LAYOUT ============ */
+  .app-container{
+    display:grid;
+    grid-template-columns:240px 1fr;
+    flex:1;
+    max-width:1400px;
+    margin:0 auto;
+    width:100%;
+  }
+
+  /* ============ SIDEBAR ============ */
+  .sidebar{
+    background-color:var(--bg);
+    border-right:1px solid var(--border);
+    padding:1.5rem 1rem;
+    display:flex;
+    flex-direction:column;
+    gap:1.5rem;
+    position:sticky;
+    top:var(--header-h);
+    align-self:start;
+    height:calc(100vh - var(--header-h));
+  }
+
+  .nav-section-title{
+    font-family:var(--font-mono);
+    font-size:0.68rem;
+    color:var(--ink-dim);
+    padding-left:0.7rem;
+  }
+
+  .nav-list{
+    list-style:none;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+
+  .nav-item{
+    width:100%;
+    text-align:left;
+    background:none;
+    border:none;
+    border-left:2px solid transparent;
+    padding:11px 12px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    color:var(--ink-soft);
+    font-weight:500;
+    font-size:0.89rem;
+    transition:background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .nav-item:hover{
+    background-color:var(--surface-alt);
+    color:var(--ink);
+  }
+
+  .nav-item[aria-selected="true"]{
+    background-color:var(--accent-soft);
+    border-left-color:var(--accent);
+    color:var(--accent-strong);
+    font-weight:600;
+  }
+
+  .nav-item-label{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    min-width:0;
+  }
+
+  .nav-item-num{
+    font-family:var(--font-mono);
+    font-size:0.72rem;
+    color:var(--ink-dim);
+    flex-shrink:0;
+  }
+
+  .nav-badge{
+    font-family:var(--font-mono);
+    font-size:0.66rem;
+    padding:2px 7px;
+    border-radius:9px;
+    background-color:var(--surface-alt);
+    color:var(--ink-dim);
+    flex-shrink:0;
+  }
+
+  .nav-item.completed .nav-badge{
+    background-color:var(--success-soft);
+    color:var(--success);
+  }
+
+  .sidebar-note{
+    margin-top:auto;
+    border-top:1px solid var(--border);
+    padding-top:1rem;
+    font-size:0.8rem;
+    line-height:1.55;
+    color:var(--ink-soft);
+  }
+
+  .sidebar-note strong{
+    color:var(--ink);
+    display:block;
+    margin-bottom:4px;
+    font-weight:600;
+    font-size:0.82rem;
+  }
+
+  /* ============ MAIN CONTENT ============ */
+  main{
+    padding:2.25rem 3rem 3rem;
+    max-width:1040px;
+    width:100%;
+    min-width:0;
+  }
+
+  .module-view{ display:none; }
+
+  .module-view.active{
+    display:block;
+    animation:fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn{
+    from{ opacity:0; transform:translateY(4px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  .module-header{
+    margin-bottom:1.85rem;
+    padding-bottom:1.5rem;
+    border-bottom:1px solid var(--border);
+  }
+
+  .module-tag{
+    display:inline-block;
+    font-family:var(--font-mono);
+    color:var(--accent);
+    font-size:0.76rem;
+    font-weight:600;
+    margin-bottom:8px;
+  }
+
+  .module-title{
+    font-family:var(--font-display);
+    font-size:1.95rem;
+    font-weight:600;
+    line-height:1.2;
+    margin-bottom:0.6rem;
+    max-width:26ch;
+  }
+
+  .module-desc{
+    color:var(--ink-soft);
+    font-size:0.98rem;
+    line-height:1.6;
+    max-width:64ch;
+  }
+
+  /* ============ CARDS ============ */
+  .grid-2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:1.1rem;
+    margin-bottom:1.6rem;
+  }
+
+  .card{
+    background-color:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius-md);
+    padding:1.35rem 1.45rem;
+  }
+
+  .card-title{
+    font-family:var(--font-display);
+    font-size:1.08rem;
+    font-weight:600;
+    margin-bottom:0.65rem;
+  }
+
+  .card-body{
+    color:var(--ink-soft);
+    font-size:0.92rem;
+    line-height:1.65;
+  }
+
+  .card-body ul{
+    margin-left:18px;
+    margin-top:6px;
+  }
+
+  .card-body li{ margin-bottom:2px; }
+
+  .card-body p + p{ margin-top:0.6rem; }
+
+  /* ============ LAB BOXES ============ */
+  .lab-box{
+    background-color:var(--surface);
+    border:1px solid var(--border);
+    border-left:3px solid var(--accent);
+    border-radius:var(--radius-md);
+    padding:1.35rem 1.5rem;
+    margin-top:1.4rem;
+  }
+
+  .lab-title{
+    font-family:var(--font-mono);
+    font-size:0.76rem;
+    color:var(--accent);
+    font-weight:600;
+    margin-bottom:0.9rem;
+  }
+
+  .lab-intro{
+    font-size:0.9rem;
+    margin-bottom:1rem;
+    color:var(--ink-soft);
+  }
+
+  .lab-actions{
+    display:flex;
+    gap:9px;
+    flex-wrap:wrap;
+  }
+
+  .lab-feedback{
+    margin-top:12px;
+    font-size:0.87rem;
+    font-weight:600;
+    min-height:1.3em;
+  }
+
+  /* ============ QUIZ ============ */
+  .quiz-container{
+    background-color:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius-md);
+    padding:1.5rem 1.6rem;
+    margin-top:1.6rem;
+  }
+
+  .quiz-header{
+    font-family:var(--font-display);
+    font-size:1.05rem;
+    font-weight:600;
+    margin-bottom:0.5rem;
+  }
+
+  .quiz-prompt{
+    font-size:0.9rem;
+    color:var(--ink-soft);
+    margin-bottom:1.1rem;
+  }
+
+  .quiz-options{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-bottom:1.2rem;
+  }
+
+  .quiz-option{
+    width:100%;
+    text-align:left;
+    background-color:var(--surface);
+    border:1px solid var(--border);
+    padding:11px 15px;
+    min-height:44px;
+    border-radius:var(--radius-sm);
+    cursor:pointer;
+    font-size:0.9rem;
+    font-family:inherit;
+    color:var(--ink);
+    transition:border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .quiz-option:hover{ background-color:var(--surface-alt); }
+
+  .quiz-option[aria-pressed="true"]{
+    border-color:var(--accent);
+    background-color:var(--accent-soft);
+  }
+
+  .quiz-option.correct{
+    border-color:var(--success);
+    background-color:var(--success-soft);
+    color:var(--success);
+  }
+
+  .quiz-option.wrong{
+    border-color:var(--danger);
+    background-color:var(--danger-soft);
+    color:var(--danger);
+  }
+
+  .quiz-option:disabled{ cursor:default; }
+
+  .feedback-box{
+    padding:11px 15px;
+    border-radius:var(--radius-sm);
+    font-size:0.87rem;
+    display:none;
+    margin-bottom:1rem;
+  }
+
+  .feedback-box.show{ display:block; }
+
+  .feedback-box.success{
+    background-color:var(--success-soft);
+    border:1px solid rgba(46,111,73,0.3);
+    color:var(--success);
+  }
+
+  .feedback-box.error{
+    background-color:var(--danger-soft);
+    border:1px solid rgba(169,62,69,0.3);
+    color:var(--danger);
+  }
+
+  /* ============ DATA TABLE ============ */
+  .data-table-container{
+    overflow-x:auto;
+    margin-top:1rem;
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+  }
+
+  table{
+    width:100%;
+    min-width:420px;
+    border-collapse:collapse;
+    font-size:0.87rem;
+    text-align:left;
+  }
+
+  th, td{
+    padding:9px 14px;
+    border-bottom:1px solid var(--border);
+    white-space:nowrap;
+  }
+
+  th{
+    font-family:var(--font-mono);
+    background-color:var(--surface-alt);
+    color:var(--ink-soft);
+    font-weight:600;
+    font-size:0.73rem;
+  }
+
+  tr:last-child td{ border-bottom:none; }
+
+  tr.dirty{ background-color:var(--gold-soft); }
+
+  tr.cleaned{ background-color:var(--success-soft); }
+
+  /* ============ CALLOUT ============ */
+  .neuro-note{
+    border-left:3px solid var(--accent);
+    background-color:var(--accent-soft);
+    padding:0.9rem 1.15rem;
+    border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+    margin:1.5rem 0;
+    font-size:0.87rem;
+    line-height:1.55;
+    color:var(--ink-soft);
+  }
+
+  .neuro-note strong{ color:var(--accent-strong); }
+
+  /* ============ CSV / PERSISTENCE BAR ============ */
+  .csv-bar{
+    background-color:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius-md);
+    padding:1.1rem 1.4rem;
+    margin-top:2.4rem;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:1rem;
+    flex-wrap:wrap;
+  }
+
+  .csv-info{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-width:0;
+  }
+
+  .csv-info-title{
+    font-weight:600;
+    font-size:0.88rem;
+  }
+
+  .csv-status{
+    font-family:var(--font-mono);
+    font-size:0.76rem;
+    color:var(--ink-dim);
+  }
+
+  .csv-bar-actions{
+    display:flex;
+    gap:9px;
+    flex-wrap:wrap;
+  }
+
+  .file-input-hidden{ display:none; }
+
+  /* ============ SLIDER / SAMPLING WIDGET ============ */
+  .slider-control{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-bottom:1rem;
+    max-width:320px;
+  }
+
+  .slider-control label{
+    font-family:var(--font-mono);
+    font-size:0.8rem;
+    color:var(--ink-soft);
+  }
+
+  input[type=range]{
+    width:100%;
+    accent-color:var(--accent);
+  }
+
+  .sample-preview{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    margin-top:0.5rem;
+  }
+
+  .sample-item{
+    padding:6px 11px;
+    background-color:var(--surface-alt);
+    border-radius:6px;
+    font-size:0.79rem;
+    font-family:var(--font-mono);
+    border:1px solid var(--border);
+    color:var(--ink-soft);
+  }
+
+  .sample-item.selected-item{
+    background-color:var(--accent);
+    color:#fff;
+    border-color:var(--accent);
+  }
+
+  /* ============ BANCO DE PRÁCTICA ============ */
+  .practice-box{ margin-top:1.4rem; }
+
+  .practice-meta{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:8px;
+    font-family:var(--font-mono);
+    font-size:0.76rem;
+    color:var(--ink-dim);
+    margin-bottom:0.8rem;
+  }
+
+  .practice-dots{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-bottom:1.1rem;
+  }
+
+  .practice-dot{
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    border:1px solid var(--border-strong);
+    background-color:var(--surface);
+    cursor:pointer;
+    padding:0;
+    font-size:0;
+  }
+
+  .practice-dot:hover{ border-color:var(--accent); }
+
+  .practice-dot.dot-current{
+    border-color:var(--accent);
+    box-shadow:0 0 0 2px var(--accent-soft-strong);
+  }
+
+  .practice-dot.dot-correct{
+    background-color:var(--success);
+    border-color:var(--success);
+  }
+
+  .practice-dot.dot-wrong{
+    background-color:var(--danger);
+    border-color:var(--danger);
+  }
+
+  .practice-actions{
+    display:flex;
+    gap:9px;
+    flex-wrap:wrap;
+    margin-top:0.4rem;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 1080px){
+    main{ padding:2rem 2rem 2.5rem; }
+  }
+
+  @media (max-width: 860px){
+    .app-container{ grid-template-columns:1fr; }
+
+    .sidebar{
+      position:sticky;
+      top:var(--header-h);
+      height:auto;
+      flex-direction:row;
+      align-items:center;
+      overflow-x:auto;
+      padding:0 1.1rem;
+      border-right:none;
+      border-bottom:1px solid var(--border);
+      z-index:90;
+      background-color:var(--surface);
+      gap:0;
+    }
+
+    .sidebar-note, .nav-section-title{ display:none; }
+
+    .nav-list{
+      flex-direction:row;
+      gap:2px;
+      width:100%;
+    }
+
+    .nav-item{
+      border-left:none;
+      border-bottom:2px solid transparent;
+      white-space:nowrap;
+      padding:14px 12px;
+    }
+
+    .nav-item[aria-selected="true"]{
+      border-left-color:transparent;
+      border-bottom-color:var(--accent);
+      background-color:transparent;
+    }
+
+    main{ padding:1.5rem 1.25rem 2.5rem; }
+
+    .grid-2{ grid-template-columns:1fr; }
+
+    .module-title{ font-size:1.6rem; }
+
+    header{ padding:0 1.1rem; }
+
+    .brand-subtitle{ display:none; }
+
+    .csv-bar{ flex-direction:column; align-items:flex-start; }
+
+    .csv-bar-actions{ width:100%; }
+
+    .csv-bar-actions .btn{ flex:1; justify-content:center; }
+  }
+
+  @media (max-width: 520px){
+    header{ height:auto; padding:0.7rem 0.9rem; flex-wrap:wrap; }
+    :root{ --header-h:auto; }
+    .header-actions{ width:100%; justify-content:space-between; }
+    .header-actions .btn span:last-child{ display:none; }
+    main{ padding:1.25rem 1rem 2rem; }
+    .module-title{ font-size:1.4rem; }
+    .module-desc{ font-size:0.9rem; }
+    .lab-actions{ flex-direction:column; }
+    .lab-actions .btn{ width:100%; justify-content:center; }
+    .card{ padding:1.1rem 1.2rem; }
+    .quiz-container, .lab-box{ padding:1.1rem 1.2rem; }
+    .practice-actions{ flex-direction:column; }
+    .practice-actions .btn{ width:100%; justify-content:center; }
+    .practice-meta{ flex-direction:column; align-items:flex-start; gap:2px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-mark" aria-hidden="true">&Sigma;</div>
+    <div class="brand-text">
+      <div class="brand-title">MasterData</div>
+      <div class="brand-subtitle">Cuaderno interactivo de estadística</div>
+    </div>
+  </div>
+
+  <div class="header-actions">
+    <div class="xp-pill">
+      <span class="xp-dot" aria-hidden="true"></span>
+      <span id="xp-count">0 XP</span>
+    </div>
+    <button class="btn" onclick="exportToCSV()"><span>Exportar</span></button>
+    <button class="btn" onclick="document.getElementById('csv-file-input').click()"><span>Cargar</span></button>
+    <input type="file" id="csv-file-input" class="file-input-hidden" accept=".csv" onchange="importFromCSV(event)">
+  </div>
+</header>
+
+<div class="progress-bar-container">
+  <div class="progress-bar-fill" id="global-progress"></div>
+</div>
+
+<div class="app-container">
+  <nav class="sidebar" aria-label="Módulos de aprendizaje">
+    <div class="nav-section-title">Módulos</div>
+    <ul class="nav-list" role="tablist">
+      <li>
+        <button class="nav-item" role="tab" aria-selected="true" onclick="switchTab('mod-1')" id="nav-mod-1">
+          <span class="nav-item-label"><span class="nav-item-num">01</span> Conceptos básicos</span>
+          <span class="nav-badge" id="badge-mod-1">0%</span>
+        </button>
+      </li>
+      <li>
+        <button class="nav-item" role="tab" aria-selected="false" onclick="switchTab('mod-2')" id="nav-mod-2">
+          <span class="nav-item-label"><span class="nav-item-num">02</span> Técnicas de muestreo</span>
+          <span class="nav-badge" id="badge-mod-2">0%</span>
+        </button>
+      </li>
+      <li>
+        <button class="nav-item" role="tab" aria-selected="false" onclick="switchTab('mod-3')" id="nav-mod-3">
+          <span class="nav-item-label"><span class="nav-item-num">03</span> Recolección de datos</span>
+          <span class="nav-badge" id="badge-mod-3">0%</span>
+        </button>
+      </li>
+      <li>
+        <button class="nav-item" role="tab" aria-selected="false" onclick="switchTab('mod-4')" id="nav-mod-4">
+          <span class="nav-item-label"><span class="nav-item-num">04</span> Limpieza de datos</span>
+          <span class="nav-badge" id="badge-mod-4">0%</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="sidebar-note">
+      <strong>Tip de aprendizaje</strong>
+      Aprender en bloques pequeños y responder pruebas de recuperación activa mejora la retención a largo plazo.
+    </div>
+  </nav>
+
+  <main>
+    <!-- MÓDULO 1 -->
+    <section id="mod-1" class="module-view active" role="tabpanel" aria-labelledby="nav-mod-1">
+      <div class="module-header">
+        <span class="module-tag">Módulo 01</span>
+        <h1 class="module-title">Conceptos básicos de estadística</h1>
+        <p class="module-desc">Comprende la estructura fundamental para interpretar universos de información sin sobrecarga cognitiva.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Población vs. muestra</div>
+          <div class="card-body">
+            <p><strong>Población:</strong> el conjunto total e íntegro de individuos u objetos de estudio (ej. todos los estudiantes de México).</p>
+            <p><strong>Muestra:</strong> subconjunto representativo extraído de la población para realizar inferencias accesibles.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Tipos de variables</div>
+          <div class="card-body">
+            <p><strong>Cualitativas (categorías):</strong></p>
+            <ul>
+              <li>Nominales: sin orden (ej. color, género)</li>
+              <li>Ordinales: con jerarquía (ej. nivel académico)</li>
+            </ul>
+            <p><strong>Cuantitativas (números):</strong></p>
+            <ul>
+              <li>Discretas: valores enteros (ej. número de hijos)</li>
+              <li>Continuas: decimales o rangos (ej. estatura)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="lab-box">
+        <div class="lab-title">Laboratorio · clasificación de variables</div>
+        <p class="lab-intro">Clasifica: <strong>"Temperatura registrada en grados Celsius"</strong></p>
+        <div class="lab-actions" id="w1-options">
+          <button class="btn" onclick="checkWidget1(false, this)">Cualitativa ordinal</button>
+          <button class="btn" onclick="checkWidget1(false, this)">Cuantitativa discreta</button>
+          <button class="btn" onclick="checkWidget1(true, this)">Cuantitativa continua</button>
+        </div>
+        <div id="w1-feedback" class="lab-feedback" role="status" aria-live="polite"></div>
+      </div>
+
+      <div class="lab-box practice-box">
+        <div class="lab-title">Banco de práctica · 10 ejercicios</div>
+        <div class="practice-meta">
+          <span id="ex-counter-1">Ejercicio 1 de 10</span>
+          <span id="ex-score-1">0/10 correctas</span>
+        </div>
+        <div class="practice-dots" id="ex-dots-1"></div>
+        <p class="lab-intro" id="ex-prompt-1"></p>
+        <div class="quiz-options" id="ex-options-1" role="radiogroup" aria-label="Opciones de práctica módulo 1"></div>
+        <div id="ex-feedback-1" class="feedback-box" role="status" aria-live="polite"></div>
+        <div class="practice-actions">
+          <button class="btn" onclick="prevExercise(1)" id="ex-prev-1">Anterior</button>
+          <button class="btn btn-primary" onclick="checkExercise(1)" id="ex-check-1">Comprobar</button>
+          <button class="btn" onclick="nextExercise(1)" id="ex-next-1">Siguiente</button>
+        </div>
+      </div>
+
+      <div class="quiz-container">
+        <div class="quiz-header">Evaluación de recuperación activa</div>
+        <p class="quiz-prompt">¿Cuál de los siguientes ejemplos representa una variable cualitativa ordinal?</p>
+        <div class="quiz-options" role="radiogroup" aria-label="Opciones módulo 1">
+          <button class="quiz-option" role="radio" aria-pressed="false" onclick="selectOption(this, 1, 0)">A. Número de vehículos en un estacionamiento.</button>
+          <button class="quiz-option" role="radio" aria-pressed="false" onclick="selectOption(this, 1, 1)">B. Grado de satisfacción de un cliente (bajo, medio, alto).</button>
+          <button class="quiz-option" role="radio" aria-pressed="false" onclick="selectOption(this, 1, 2)">C. Estatura de un grupo de atletas en metros.</button>
+        </div>
+        <div id="quiz-fb-1" class="feedback-box" role="status" aria-live="polite"></div>
+        <button class="btn btn-primary" onclick="submitQuiz(1, 1)">Comprobar respuesta</button>
+      </div>
+    </section>
+
+    <!-- MÓDULO 2 -->
+    <section id="mod-2" class="module-view" role="tabpanel" aria-labelledby="nav-mod-2">
+      <div class="module-header">
+        <span class="module-tag">Módulo 02</span>
+        <h1 class="module-title">Técnicas de muestreo</h1>
+        <p class="module-desc">Aprende a seleccionar fragmentos de datos evitando sesgos cognitivos e inferencias erróneas.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Probabilístico</div>
+          <div class="card-body">
+            <p>Todos los elementos tienen una probabilidad conocida y distinta de cero de ser elegidos.</p>
+            <ul>
+              <li><strong>Aleatorio simple:</strong> sorteo puro.</li>
+              <li><strong>Sistemático:</strong> selección cada K elementos.</li>
+              <li><strong>Estratificado:</strong> división por subgrupos (estratos) homogéneos.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">No probabilístico</div>
+          <div class="card-body">
+            <p>La selección depende del criterio del investigador o de la accesibilidad.</p>
+            <ul>
+              <li><strong>Por conveniencia:</strong> sujetos fácilmente disponibles.</li>
+              <li><strong>Bola de nieve:</strong> participantes reclutan a otros participantes.</li>
+              <li><strong>Por cuotas:</strong> proporciones fijas prefijadas.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="lab-box">
+        <div class="lab-title">Laboratorio · simulador de muestreo sistemático (K)</div>
+        <p class="lab-intro">Ajusta el intervalo de salto (K) para ver cómo se extrae la muestra de un grupo de 12 elementos:</p>
+        <div class="slider-control">
+          <label for="k-slider">Intervalo K: <strong id="k-value">3</strong></label>
+          <input type="range" id="k-slider" min="2" max="4" value="3" oninput="updateSamplingSim()">
+        </div>
+        <div class="sample-preview" id="sampling-visual" aria-live="polite"></div>
+      </div>
+
+      <div class="lab-box practice-box">
+        <div class="lab-title">Banco de práctica · 10 ejercicios</div>
+        <div class="practice-meta">
+          <span id="ex-counter-2">Ejercicio 1 de 10</span>
+          <span id="ex-score-2">0/10 correctas</span>
+        </div>
+        <div class="practice-dots" id="ex-dots-2"></div>
+        <p class="lab-intro" id="ex-prompt-2"></p>
+        <div class="quiz-options" id="ex-options-2" role="radiogroup" aria-label="Opciones de práctica módulo 2"></div>
+        <div id="ex-feedback-2" class="feedback-box" role="status" aria-live="polite"></div>
+        <div class="practice-actions">
+          <button class="btn" onclick="prevExercise(2)" id="ex-prev-2">Anterior</button>
+          <button class="btn btn-primary" onclick="checkExercise(2)" id="ex-check-2">Comprobar</button>
+          <button class="btn" onclick="nextExercise(2)" id="ex-next-2">Siguiente</button>
+        </div>
+      </div>
+
+      <div class="quiz-container">
+        <div class="quiz-header">Evaluación de recuperación activa</div>
+        <p class="quiz-prompt">Si seleccionas a los clientes dividiéndolos por grupo de edad y tomando una muestra aleatoria dentro de cada grupo, ¿qué técnica aplicas?</p>
+        <div class="quiz-options" role="radiogroup" aria-label="Opciones módulo 2">
+          <button class="quiz-option" role="radio" aria-pressed="false" onclick="selectOption(this, 2, 0)">A. Muestreo estratificado.</button>
+          <button class="quiz-option" role="radio" aria-pressed="false" onclick="selectOption(this, 2, 1)">B. Muestreo por bola de nieve.</button>
+          <button class="quiz-option" role="radio" aria-pressed="false" onclick="selectOption(this, 2, 2)">C. Muestreo sistemático.</button>
+        </div>
+        <div id="quiz-fb-2" class="feedback-box" role="status" aria-live="polite"></div>
+        <button class="btn btn-primary" onclick="submitQuiz(2, 0)">Comprobar respuesta</button>
+      </div>
+    </section>
+
+    <!-- MÓDULO 3 -->
+    <section id="mod-3" class="module-view" role="tabpanel" aria-labelledby="nav-mod-3">
+      <div class="module-header">
+        <span class="module-tag">Módulo 03</span>
+        <h1 class="module-title">Técnicas de recolección de datos</h1>
+        <p class="module-desc">Estrategias y canales para captura directa de información cualitativa y cuantitativa.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Fuentes primarias</div>
+          <div class="card-body">
+            <p>Información recolectada directamente de la fuente de origen por el investigador.</p>
+            <p><strong>Técnicas:</strong> encuestas estructuradas, entrevistas a profundidad, observación directa, experimentos de laboratorio.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Fuentes secundarias</div>
+          <div class="card-body">
+            <p>Información preexistente recopilada y procesada previamente por otros autores o entidades.</p>
+            <p><strong>Técnicas:</strong> extracción de bases de datos públicas, web scraping, consulta de registros históricos, APIs.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="neuro-note">
+        <strong>Dato clave:</strong> el mismo hecho ("edad de un cliente") puede venir de una fuente primaria (encuesta propia) o secundaria (censo del INEGI) — lo que cambia es quién capturó el dato originalmente, no el dato en sí.
+      </div>
+
+      <div class="lab-box practice-box">
+        <div class="lab-title">Banco de práctica · 10 ejercicios</div>
+        <div class="practice-meta">
+          <span id="ex-counter-3">Ejercicio 1 de 10</span>
+          <span id="ex-score-3">0/10 correctas</span>
+        </div>
+        <div class="practice-dots" id="ex-dots-3"></div>
+        <p class="lab-intro" id="ex-prompt-3"></p>
+        <div class="quiz-options" id="ex-options-3" role="radiogroup" aria-label="Opciones de práctica módulo 3"></div>
+        <div id="ex-feedback-3" class="feedback-box" role="status" aria-live="polite"></div>
+        <div class="practice-actions">
+          <button class="btn" onclick="prevExercise(3)" id="ex-prev-3">Anterior</button>
+          <button class="btn btn-primary" onclick="checkExercise(3)" id="ex-check-3">Comprobar</button>
+          <button class="btn" onclick="nextExercise(3)" id="ex-next-3">Siguiente</button>
+        </div>
+      </div>
+
+      <div class="quiz-container">
+        <div class="quiz-header">Evaluación de recuperación activa</div>
+        <p class="quiz-prompt">¿Cuál representa una técnica de recolección de fuente primaria?</p>
+        <div class="quiz-options" role="radiogroup" aria-label="Opciones módulo 3">
+          <button class="quiz-option" role="radio" aria-pressed="false" onclick="selectOption(this, 3, 0)">A. Consultar un reporte del INEGI publicado en 2020.</button>
+          <button class="quiz-option" role="radio" aria-pressed="false" onclick="selectOption(this, 3, 1)">B. Descargar un dataset público desde Kaggle.</button>
+          <button class="quiz-option" role="radio" aria-pressed="false" onclick="selectOption(this, 3, 2)">C. Aplicar un cuestionario en línea a usuarios activos de tu app.</button>
+        </div>
+        <div id="quiz-fb-3" class="feedback-box" role="status" aria-live="polite"></div>
+        <button class="btn btn-primary" onclick="submitQuiz(3, 2)">Comprobar respuesta</button>
+      </div>
+    </section>
+
+    <!-- MÓDULO 4 -->
+    <section id="mod-4" class="module-view" role="tabpanel" aria-labelledby="nav-mod-4">
+      <div class="module-header">
+        <span class="module-tag">Módulo 04</span>
+        <h1 class="module-title">Limpieza y ordenación de datos</h1>
+        <p class="module-desc">Transformación de datos crudos (dirty data) en conjuntos listos para análisis de alta fiabilidad.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Retos de limpieza</div>
+          <div class="card-body">
+            <ul>
+              <li><strong>Valores nulos:</strong> imputación o eliminación.</li>
+              <li><strong>Registros duplicados:</strong> desduplicación lógica.</li>
+              <li><strong>Formato inconsistente:</strong> espacios, mayúsculas o minúsculas.</li>
+              <li><strong>Valores atípicos:</strong> errores de captura.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Laboratorio interactivo</div>
+          <div class="card-body">
+            <p>Limpia el mini dataset de abajo usando los controles interactivos y observa la transformación fila por fila.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="lab-box">
+        <div class="lab-title">Laboratorio · limpieza de dataset</div>
+        <div class="lab-actions">
+          <button class="btn" onclick="cleanDataset('nulls')">Tratar nulos (imputar media)</button>
+          <button class="btn" onclick="cleanDataset('duplicates')">Eliminar duplicados</button>
+          <button class="btn" onclick="cleanDataset('format')">Estandarizar nombres</button>
+          <button class="btn btn-primary" onclick="resetDataset()">Restablecer dataset</button>
+        </div>
+
+        <div class="data-table-container">
+          <table>
+            <thead>
+              <tr><th>ID</th><th>Nombre</th><th>Edad</th><th>Puntaje</th></tr>
+            </thead>
+            <tbody id="dataset-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="lab-box practice-box">
+        <div class="lab-title">Banco de práctica · 10 ejercicios</div>
+        <div class="practice-meta">
+          <span id="ex-counter-4">Ejercicio 1 de 10</span>
+          <span id="ex-score-4">0/10 correctas</span>
+        </div>
+        <div class="practice-dots" id="ex-dots-4"></div>
+        <p class="lab-intro" id="ex-prompt-4"></p>
+        <div class="quiz-options" id="ex-options-4" role="radiogroup" aria-label="Opciones de práctica módulo 4"></div>
+        <div id="ex-feedback-4" class="feedback-box" role="status" aria-live="polite"></div>
+        <div class="practice-actions">
+          <button class="btn" onclick="prevExercise(4)" id="ex-prev-4">Anterior</button>
+          <button class="btn btn-primary" onclick="checkExercise(4)" id="ex-check-4">Comprobar</button>
+          <button class="btn" onclick="nextExercise(4)" id="ex-next-4">Siguiente</button>
+        </div>
+      </div>
+
+      <div class="quiz-container">
+        <div class="quiz-header">Evaluación de recuperación activa</div>
+        <p class="quiz-prompt">¿Qué acción es más adecuada al detectar un valor de edad de "999" en un registro de estudiantes?</p>
+        <div class="quiz-options" role="radiogroup" aria-label="Opciones módulo 4">
+          <button class="quiz-option" role="radio" aria-pressed="false" onclick="selectOption(this, 4, 0)">A. Conservarlo como un promedio general.</button>
+          <button class="quiz-option" role="radio" aria-pressed="false" onclick="selectOption(this, 4, 1)">B. Tratarlo como un valor atípico (outlier) o error de captura, y removerlo o corregirlo.</button>
+          <button class="quiz-option" role="radio" aria-pressed="false" onclick="selectOption(this, 4, 2)">C. Duplicar la fila para compensar el error.</button>
+        </div>
+        <div id="quiz-fb-4" class="feedback-box" role="status" aria-live="polite"></div>
+        <button class="btn btn-primary" onclick="submitQuiz(4, 1)">Comprobar respuesta</button>
+      </div>
+    </section>
+
+    <!-- BARRA DE PERSISTENCIA -->
+    <div class="csv-bar">
+      <div class="csv-info">
+        <div>
+          <div class="csv-info-title">Progreso guardado en este dispositivo</div>
+          <div class="csv-status" id="csv-status-text">0% completado · 0 XP</div>
+        </div>
+      </div>
+      <div class="csv-bar-actions">
+        <button class="btn" onclick="exportToCSV()">Descargar CSV</button>
+        <button class="btn" onclick="confirmReset()">Reiniciar todo</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  // ---------- ESTADO ----------
+  const STORAGE_KEY = 'masterdata_progress_v2';
+  const TOTAL_MODULES = 4;
+
+  let appState = {
+    xp: 0,
+    modules: {
+      'mod-1': { completed: false, score: 0 },
+      'mod-2': { completed: false, score: 0 },
+      'mod-3': { completed: false, score: 0 },
+      'mod-4': { completed: false, score: 0 }
+    },
+    widget1Done: false,
+    selectedQuizAnswers: {},
+    exerciseState: {
+      1: { index: 0, selected: undefined, answers: {}, xpAwarded: {} },
+      2: { index: 0, selected: undefined, answers: {}, xpAwarded: {} },
+      3: { index: 0, selected: undefined, answers: {}, xpAwarded: {} },
+      4: { index: 0, selected: undefined, answers: {}, xpAwarded: {} }
+    }
+  };
+
+  // ---------- BANCO DE 40 EJERCICIOS (10 POR MÓDULO) ----------
+  const EXERCISE_BANKS = {
+    1: [
+      { prompt: 'Clasifica: "Número de hermanos que tiene una persona"', options: ['Cualitativa nominal', 'Cuantitativa discreta', 'Cuantitativa continua'], correct: 1 },
+      { prompt: 'Clasifica: "Nivel de escolaridad alcanzado (primaria, secundaria, preparatoria, licenciatura)"', options: ['Cualitativa nominal', 'Cualitativa ordinal', 'Cuantitativa discreta'], correct: 1 },
+      { prompt: 'Clasifica: "Color de cabello de una persona"', options: ['Cualitativa nominal', 'Cualitativa ordinal', 'Cuantitativa continua'], correct: 0 },
+      { prompt: 'Clasifica: "Estatura de un estudiante en centímetros"', options: ['Cuantitativa discreta', 'Cuantitativa continua', 'Cualitativa ordinal'], correct: 1 },
+      { prompt: 'Clasifica: "Número de mascotas registradas en un hogar"', options: ['Cuantitativa continua', 'Cualitativa nominal', 'Cuantitativa discreta'], correct: 2 },
+      { prompt: 'Clasifica: "Talla de camiseta (chica, mediana, grande)"', options: ['Cualitativa ordinal', 'Cualitativa nominal', 'Cuantitativa discreta'], correct: 0 },
+      { prompt: 'Clasifica: "País de nacimiento de un encuestado"', options: ['Cualitativa ordinal', 'Cualitativa nominal', 'Cuantitativa discreta'], correct: 1 },
+      { prompt: 'Clasifica: "Tiempo, en segundos, que tarda un corredor en completar una carrera"', options: ['Cuantitativa discreta', 'Cuantitativa continua', 'Cualitativa nominal'], correct: 1 },
+      { prompt: '"Todos los alumnos inscritos en una preparatoria" es un ejemplo de:', options: ['Muestra', 'Población', 'Variable'], correct: 1 },
+      { prompt: '"200 alumnos elegidos al azar de una preparatoria de 3000" es un ejemplo de:', options: ['Población', 'Muestra', 'Censo'], correct: 1 }
+    ],
+    2: [
+      { prompt: 'Un investigador numera a los 500 empleados de una empresa y usa un generador de números aleatorios para elegir 40. ¿Qué técnica aplica?', options: ['Muestreo sistemático', 'Muestreo aleatorio simple', 'Muestreo por cuotas'], correct: 1 },
+      { prompt: 'En una fábrica se inspecciona una pieza de cada 25 que salen de la línea de producción. ¿Qué técnica es?', options: ['Muestreo sistemático', 'Muestreo estratificado', 'Muestreo por conveniencia'], correct: 0 },
+      { prompt: 'Se agrupa a los pacientes de un hospital por tipo de enfermedad y se muestrea aleatoriamente dentro de cada grupo. ¿Qué técnica es?', options: ['Muestreo por cuotas', 'Muestreo estratificado', 'Bola de nieve'], correct: 1 },
+      { prompt: 'Un investigador entrevista solo a sus compañeros de clase porque son fáciles de contactar. ¿Qué técnica es?', options: ['Muestreo por conveniencia', 'Muestreo aleatorio simple', 'Muestreo sistemático'], correct: 0 },
+      { prompt: 'Se pide a cada participante de un estudio sobre una comunidad poco accesible que recomiende a otro miembro de esa comunidad. ¿Qué técnica es?', options: ['Muestreo por cuotas', 'Bola de nieve', 'Muestreo estratificado'], correct: 1 },
+      { prompt: 'Se fija de antemano que se necesitan 30 hombres y 30 mujeres, y se buscan participantes hasta cumplir esas cuotas sin usar aleatoriedad. ¿Qué técnica es?', options: ['Muestreo por cuotas', 'Muestreo sistemático', 'Muestreo aleatorio simple'], correct: 0 },
+      { prompt: 'Una escuela divide a sus alumnos por grado escolar y toma una muestra proporcional aleatoria de cada grado. ¿Qué técnica es?', options: ['Muestreo estratificado', 'Bola de nieve', 'Muestreo por conveniencia'], correct: 0 },
+      { prompt: 'Un encuestador para en la calle a las primeras 20 personas que pasan frente a él. ¿Qué técnica es?', options: ['Muestreo sistemático', 'Muestreo por conveniencia', 'Muestreo estratificado'], correct: 1 },
+      { prompt: 'De una lista de 1000 clientes numerados, se elige un punto de partida al azar y luego cada décimo cliente. ¿Qué técnica es?', options: ['Muestreo sistemático', 'Muestreo aleatorio simple', 'Bola de nieve'], correct: 0 },
+      { prompt: 'Un estudio sobre consumidores de un producto raro pide a cada entrevistado referir a otros consumidores que conozca. ¿Qué técnica es?', options: ['Muestreo por cuotas', 'Muestreo estratificado', 'Bola de nieve'], correct: 2 }
+    ],
+    3: [
+      { prompt: 'Aplicar una encuesta propia a los clientes de tu cafetería. ¿Qué tipo de fuente es?', options: ['Fuente primaria', 'Fuente secundaria'], correct: 0 },
+      { prompt: 'Consultar las cifras de inflación publicadas por el Banco de México. ¿Qué tipo de fuente es?', options: ['Fuente primaria', 'Fuente secundaria'], correct: 1 },
+      { prompt: 'Realizar entrevistas a profundidad con expertos en el tema de tu investigación. ¿Qué tipo de fuente es?', options: ['Fuente primaria', 'Fuente secundaria'], correct: 0 },
+      { prompt: 'Descargar un dataset de clima histórico publicado por la NASA. ¿Qué tipo de fuente es?', options: ['Fuente primaria', 'Fuente secundaria'], correct: 1 },
+      { prompt: 'Observar directamente el comportamiento de compra de los clientes en una tienda. ¿Qué tipo de fuente es?', options: ['Fuente primaria', 'Fuente secundaria'], correct: 0 },
+      { prompt: 'Usar los registros de ventas que el sistema de la empresa ya capturó el año pasado. ¿Qué tipo de fuente es?', options: ['Fuente primaria', 'Fuente secundaria'], correct: 1 },
+      { prompt: 'Diseñar y aplicar un experimento de laboratorio propio para tu investigación. ¿Qué tipo de fuente es?', options: ['Fuente primaria', 'Fuente secundaria'], correct: 0 },
+      { prompt: 'Revisar artículos académicos previamente publicados sobre tu tema de estudio. ¿Qué tipo de fuente es?', options: ['Fuente primaria', 'Fuente secundaria'], correct: 1 },
+      { prompt: 'Hacer web scraping de datos ya publicados en un sitio de noticias. ¿Qué tipo de fuente es?', options: ['Fuente primaria', 'Fuente secundaria'], correct: 1 },
+      { prompt: 'Aplicar un cuestionario estructurado diseñado específicamente para tu proyecto de investigación. ¿Qué tipo de fuente es?', options: ['Fuente primaria', 'Fuente secundaria'], correct: 0 }
+    ],
+    4: [
+      { prompt: 'Un registro de edad aparece como "N/A" en la tabla. ¿Qué problema representa?', options: ['Registro duplicado', 'Valor nulo o faltante', 'Valor atípico'], correct: 1 },
+      { prompt: 'Dos filas de la tabla tienen exactamente el mismo ID de cliente y los mismos datos. ¿Qué problema representa?', options: ['Registro duplicado', 'Formato inconsistente', 'Valor atípico'], correct: 0 },
+      { prompt: 'El campo nombre contiene " JUAN PEREZ" en una fila y "juan perez" en otra, refiriéndose a la misma persona. ¿Qué problema representa?', options: ['Valor nulo', 'Formato inconsistente', 'Registro duplicado'], correct: 1 },
+      { prompt: 'Un registro muestra una edad de 350 años. ¿Qué problema representa?', options: ['Valor atípico (outlier)', 'Formato inconsistente', 'Valor nulo'], correct: 0 },
+      { prompt: 'Reemplazar un valor de edad faltante por el promedio de la columna. ¿Qué técnica de limpieza es esta?', options: ['Eliminación de duplicados', 'Imputación por media', 'Estandarización de formato'], correct: 1 },
+      { prompt: 'Quitar los espacios en blanco al inicio y al final de un campo de texto. ¿Qué técnica de limpieza es esta?', options: ['Estandarización de formato', 'Imputación por media', 'Detección de outliers'], correct: 0 },
+      { prompt: 'Convertir todos los textos de una columna a mayúsculas para que coincidan entre sí. ¿Qué técnica de limpieza es esta?', options: ['Eliminación de duplicados', 'Estandarización de formato', 'Imputación por media'], correct: 1 },
+      { prompt: 'Eliminar una fila que aparece repetida exactamente en la tabla. ¿Qué técnica de limpieza es esta?', options: ['Eliminación de duplicados', 'Estandarización de formato', 'Detección de outliers'], correct: 0 },
+      { prompt: 'Un campo de "sexo" contiene los valores "M", "Masculino" y "m" para referirse a lo mismo. ¿Qué problema representa?', options: ['Registro duplicado', 'Formato inconsistente', 'Valor atípico'], correct: 1 },
+      { prompt: 'Un campo de calificación tiene el valor -5 cuando el rango válido es de 0 a 100. ¿Qué problema representa?', options: ['Valor atípico o error de captura', 'Formato inconsistente', 'Registro duplicado'], correct: 0 }
+    ]
+  };
+
+  const initialData = [
+    { id: 101, name: "  carlos perez ", age: 24, score: 88 },
+    { id: 102, name: "MARIA GOMEZ", age: "N/A", score: 95 },
+    { id: 101, name: "  carlos perez ", age: 24, score: 88 },
+    { id: 103, name: "luis fernandez", age: 29, score: 72 }
+  ];
+
+  let currentData = JSON.parse(JSON.stringify(initialData));
+
+  // ---------- INICIO ----------
+  window.addEventListener('DOMContentLoaded', () => {
+    loadFromLocalStorage();
+    renderSamplingSim();
+    renderTable();
+    updateProgressUI();
+    for (let m = 1; m <= 4; m++) renderExercise(m);
+  });
+
+  // ---------- NAVEGACIÓN ----------
+  function switchTab(modId) {
+    document.querySelectorAll('.module-view').forEach(view => view.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(item => item.setAttribute('aria-selected', 'false'));
+
+    document.getElementById(modId).classList.add('active');
+    document.getElementById('nav-' + modId).setAttribute('aria-selected', 'true');
+    document.getElementById(modId).scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }
+
+  // ---------- WIDGET 1: CLASIFICACIÓN DE VARIABLES ----------
+  function checkWidget1(isCorrect, btnElement) {
+    const fb = document.getElementById('w1-feedback');
+    const buttons = document.querySelectorAll('#w1-options .btn');
+
+    if (isCorrect) {
+      fb.style.color = "var(--success)";
+      fb.innerText = "Correcto. La temperatura es cuantitativa (numérica) y continua (admite decimales).";
+      if (!appState.widget1Done) {
+        appState.widget1Done = true;
+        addXP(10);
+        fb.innerText += " (+10 XP)";
+        saveToLocalStorage();
+      }
+      buttons.forEach(b => b.disabled = true);
+    } else {
+      fb.style.color = "var(--danger)";
+      fb.innerText = "Incorrecto. Recuerda que la temperatura se mide en números con decimales continuos.";
+    }
+  }
+
+  // ---------- WIDGET 2: MUESTREO SISTEMÁTICO ----------
+  function updateSamplingSim() {
+    const k = parseInt(document.getElementById('k-slider').value, 10);
+    document.getElementById('k-value').innerText = k;
+    renderSamplingSim(k);
+  }
+
+  function renderSamplingSim(k = 3) {
+    const container = document.getElementById('sampling-visual');
+    container.innerHTML = '';
+    for (let i = 1; i <= 12; i++) {
+      const item = document.createElement('div');
+      item.className = 'sample-item';
+      if (i % k === 0) {
+        item.classList.add('selected-item');
+        item.innerText = `Sujeto ${i} · muestra`;
+      } else {
+        item.innerText = `Sujeto ${i}`;
+      }
+      container.appendChild(item);
+    }
+  }
+
+  // ---------- WIDGET 4: LABORATORIO DE LIMPIEZA ----------
+  function renderTable() {
+    const tbody = document.getElementById('dataset-body');
+    tbody.innerHTML = '';
+    currentData.forEach(row => {
+      const tr = document.createElement('tr');
+      if (row.age === "N/A" || (typeof row.name === 'string' && row.name.trim() !== row.name)) {
+        tr.className = "dirty";
+      } else if (row.cleaned) {
+        tr.className = "cleaned";
+      }
+      tr.innerHTML = `<td>${row.id}</td><td>${row.name}</td><td>${row.age}</td><td>${row.score}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function cleanDataset(action) {
+    if (action === 'nulls') {
+      const validAges = currentData.map(r => r.age).filter(a => typeof a === 'number');
+      const mean = validAges.length
+        ? Math.round(validAges.reduce((sum, a) => sum + a, 0) / validAges.length)
+        : 0;
+      currentData.forEach(row => {
+        if (row.age === "N/A") {
+          row.age = mean;
+          row.cleaned = true;
+        }
+      });
+    } else if (action === 'duplicates') {
+      const unique = [];
+      const ids = new Set();
+      currentData.forEach(row => {
+        if (!ids.has(row.id)) {
+          ids.add(row.id);
+          unique.push(row);
+        }
+      });
+      currentData = unique;
+    } else if (action === 'format') {
+      currentData.forEach(row => {
+        const clean = row.name.trim().toUpperCase();
+        if (clean !== row.name) row.cleaned = true;
+        row.name = clean;
+      });
+    }
+    renderTable();
+    addXP(15);
+    saveToLocalStorage();
+  }
+
+  function resetDataset() {
+    currentData = JSON.parse(JSON.stringify(initialData));
+    renderTable();
+  }
+
+  // ---------- QUIZ DE RECUPERACIÓN ACTIVA ----------
+  function selectOption(element, modNum, optionIndex) {
+    const parent = element.parentElement;
+    parent.querySelectorAll('.quiz-option').forEach(opt => opt.setAttribute('aria-pressed', 'false'));
+    element.setAttribute('aria-pressed', 'true');
+    appState.selectedQuizAnswers[modNum] = optionIndex;
+  }
+
+  function submitQuiz(modNum, correctIndex) {
+    const selected = appState.selectedQuizAnswers[modNum];
+    const fb = document.getElementById(`quiz-fb-${modNum}`);
+    const options = document.querySelectorAll(`#mod-${modNum} .quiz-option`);
+
+    if (selected === undefined) {
+      fb.className = "feedback-box show error";
+      fb.innerText = "Selecciona una opción antes de comprobar.";
+      return;
+    }
+
+    options.forEach((opt, idx) => {
+      opt.classList.remove('correct', 'wrong');
+      if (idx === correctIndex) opt.classList.add('correct');
+      else if (idx === selected) opt.classList.add('wrong');
+    });
+
+    if (selected === correctIndex) {
+      fb.className = "feedback-box show success";
+      const already = appState.modules[`mod-${modNum}`].completed;
+      fb.innerText = already
+        ? "Respuesta correcta. Este módulo ya estaba acreditado."
+        : "Excelente, respuesta correcta. Has reforzado tu retención de memoria. (+25 XP)";
+      if (!already) {
+        appState.modules[`mod-${modNum}`].completed = true;
+        appState.modules[`mod-${modNum}`].score = 100;
+        addXP(25);
+        updateProgressUI();
+        saveToLocalStorage();
+      }
+      options.forEach(opt => opt.disabled = true);
+    } else {
+      fb.className = "feedback-box show error";
+      fb.innerText = "Intento incorrecto. Revisa el contenido del módulo y vuelve a intentarlo.";
+    }
+  }
+
+  // ---------- BANCO DE PRÁCTICA (40 EJERCICIOS) ----------
+  function renderExercise(modNum) {
+    const state = appState.exerciseState[modNum];
+    const bank = EXERCISE_BANKS[modNum];
+    const idx = state.index;
+    const ex = bank[idx];
+    const answered = state.answers[idx];
+
+    document.getElementById(`ex-counter-${modNum}`).innerText = `Ejercicio ${idx + 1} de ${bank.length}`;
+    const correctCount = Object.values(state.answers).filter(a => a.correct).length;
+    document.getElementById(`ex-score-${modNum}`).innerText = `${correctCount}/${bank.length} correctas`;
+    document.getElementById(`ex-prompt-${modNum}`).innerText = ex.prompt;
+
+    const optsContainer = document.getElementById(`ex-options-${modNum}`);
+    optsContainer.innerHTML = '';
+    ex.options.forEach((optText, i) => {
+      const b = document.createElement('button');
+      b.className = 'quiz-option';
+      b.setAttribute('role', 'radio');
+      b.innerText = optText;
+      if (answered) {
+        b.disabled = true;
+        b.setAttribute('aria-pressed', i === answered.selected ? 'true' : 'false');
+        if (i === ex.correct) b.classList.add('correct');
+        else if (i === answered.selected) b.classList.add('wrong');
+      } else {
+        b.setAttribute('aria-pressed', state.selected === i ? 'true' : 'false');
+        b.onclick = () => selectExerciseOption(modNum, i);
+      }
+      optsContainer.appendChild(b);
+    });
+
+    const fb = document.getElementById(`ex-feedback-${modNum}`);
+    if (answered) {
+      fb.className = 'feedback-box show ' + (answered.correct ? 'success' : 'error');
+      fb.innerText = answered.correct ? '¡Correcto!' : `Incorrecto. Respuesta correcta: ${ex.options[ex.correct]}`;
+    } else {
+      fb.className = 'feedback-box';
+      fb.innerText = '';
+    }
+
+    document.getElementById(`ex-check-${modNum}`).style.display = answered ? 'none' : 'inline-flex';
+    document.getElementById(`ex-prev-${modNum}`).disabled = idx === 0;
+    document.getElementById(`ex-next-${modNum}`).disabled = idx === bank.length - 1;
+
+    renderExerciseDots(modNum);
+  }
+
+  function renderExerciseDots(modNum) {
+    const state = appState.exerciseState[modNum];
+    const bank = EXERCISE_BANKS[modNum];
+    const container = document.getElementById(`ex-dots-${modNum}`);
+    container.innerHTML = '';
+    bank.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'practice-dot';
+      dot.setAttribute('aria-label', `Ir al ejercicio ${i + 1}`);
+      const ans = state.answers[i];
+      if (ans) dot.classList.add(ans.correct ? 'dot-correct' : 'dot-wrong');
+      if (i === state.index) dot.classList.add('dot-current');
+      dot.onclick = () => { state.index = i; renderExercise(modNum); };
+      container.appendChild(dot);
+    });
+  }
+
+  function selectExerciseOption(modNum, optIndex) {
+    const state = appState.exerciseState[modNum];
+    if (state.answers[state.index]) return;
+    state.selected = optIndex;
+    renderExercise(modNum);
+  }
+
+  function checkExercise(modNum) {
+    const state = appState.exerciseState[modNum];
+    const bank = EXERCISE_BANKS[modNum];
+    const idx = state.index;
+
+    if (state.selected === undefined || state.selected === null) {
+      const fb = document.getElementById(`ex-feedback-${modNum}`);
+      fb.className = 'feedback-box show error';
+      fb.innerText = 'Selecciona una opción antes de comprobar.';
+      return;
+    }
+
+    const ex = bank[idx];
+    const correct = state.selected === ex.correct;
+    state.answers[idx] = { selected: state.selected, correct: correct };
+
+    if (correct && !state.xpAwarded[idx]) {
+      state.xpAwarded[idx] = true;
+      addXP(3);
+    }
+
+    state.selected = undefined;
+    renderExercise(modNum);
+    saveToLocalStorage();
+  }
+
+  function nextExercise(modNum) {
+    const state = appState.exerciseState[modNum];
+    const bank = EXERCISE_BANKS[modNum];
+    if (state.index < bank.length - 1) {
+      state.index++;
+      state.selected = undefined;
+      renderExercise(modNum);
+    }
+  }
+
+  function prevExercise(modNum) {
+    const state = appState.exerciseState[modNum];
+    if (state.index > 0) {
+      state.index--;
+      state.selected = undefined;
+      renderExercise(modNum);
+    }
+  }
+
+  // ---------- XP Y PROGRESO ----------
+  function addXP(amount) {
+    appState.xp += amount;
+    document.getElementById('xp-count').innerText = `${appState.xp} XP`;
+  }
+
+  function updateProgressUI() {
+    let completedCount = 0;
+
+    for (let i = 1; i <= TOTAL_MODULES; i++) {
+      const modKey = `mod-${i}`;
+      const badge = document.getElementById(`badge-${modKey}`);
+      const navItem = document.getElementById(`nav-${modKey}`);
+
+      if (appState.modules[modKey].completed) {
+        completedCount++;
+        badge.innerText = "100%";
+        navItem.classList.add('completed');
+      }
+    }
+
+    const pct = Math.round((completedCount / TOTAL_MODULES) * 100);
+    document.getElementById('global-progress').style.width = `${pct}%`;
+    document.getElementById('csv-status-text').innerText = `${pct}% completado · ${appState.xp} XP`;
+    document.getElementById('xp-count').innerText = `${appState.xp} XP`;
+  }
+
+  // ---------- PERSISTENCIA LOCAL (AUTOGUARDADO) ----------
+  function saveToLocalStorage() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+    } catch (e) {
+      // almacenamiento no disponible; el progreso sigue exportable por CSV
+    }
+  }
+
+  function loadFromLocalStorage() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.modules) {
+          appState = Object.assign(appState, parsed);
+        }
+      }
+    } catch (e) {
+      // ignorar datos corruptos
+    }
+  }
+
+  function confirmReset() {
+    if (confirm("Esto borrará tu progreso y XP en este dispositivo. ¿Continuar?")) {
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
+  }
+
+  // ---------- EXPORTAR / IMPORTAR CSV ----------
+  function exportToCSV() {
+    const headers = ["ModuleID", "Completed", "Score", "TotalXP"];
+    let csvRows = [headers.join(",")];
+
+    Object.keys(appState.modules).forEach(modId => {
+      const row = [
+        modId,
+        appState.modules[modId].completed ? "1" : "0",
+        appState.modules[modId].score,
+        appState.xp
+      ];
+      csvRows.push(row.join(","));
+    });
+
+    const blob = new Blob([csvRows.join("\n")], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "masterdata_progress.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  function importFromCSV(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const text = e.target.result;
+      const lines = text.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+
+      if (lines.length > 1) {
+        for (let i = 1; i < lines.length; i++) {
+          const cols = lines[i].split(",");
+          if (cols.length >= 4) {
+            const modId = cols[0];
+            const completed = cols[1] === "1";
+            const score = parseInt(cols[2], 10) || 0;
+            const xp = parseInt(cols[3], 10) || 0;
+
+            if (appState.modules[modId]) {
+              appState.modules[modId].completed = completed;
+              appState.modules[modId].score = score;
+            }
+            appState.xp = Math.max(appState.xp, xp);
+          }
+        }
+        updateProgressUI();
+        saveToLocalStorage();
+        alert("Progreso cargado con éxito desde el archivo CSV.");
+      }
+    };
+    reader.readAsText(file);
+  }
+</script>
+</body>
+</html>
